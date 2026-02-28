@@ -8,16 +8,13 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
     <link rel="stylesheet" href="styles.css">
     <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.4/dist/chart.umd.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 </head>
 <body>
     <nav class="navbar">
         <div class="logo">
-            <i class="fas fa-robot"></i> AI Tracker
+            <i class="fas fa-robot"></i> AI Usage Tracker
         </div>
-        <button class="hamburger" id="hamburger" aria-label="Toggle menu">
-            <i class="fas fa-bars"></i>
-        </button>
+        <button class="hamburger" id="hamburger"><i class="fas fa-bars"></i></button>
         <div class="nav-links" id="nav-links">
             <a href="#dashboard"><i class="fas fa-tachometer-alt"></i> Dashboard</a>
             <a href="#insights"><i class="fas fa-chart-line"></i> Insights</a>
@@ -28,127 +25,170 @@
     </nav>
 
     <div class="container">
-        <!-- Welcome / First-time overlay -->
-        <div id="welcome-overlay" class="modal" style="display:none;">
-            <div class="modal-content welcome-content">
-                <h2>Welcome to AI Usage Tracker!</h2>
-                <p>Track your free-tier AI usage across services like Grok, Claude, Gemini, and more.</p>
-                <p>We've added some popular services for you to get started.</p>
-                <button class="button primary" onclick="closeWelcome()">Get Started</button>
-            </div>
-        </div>
-
-        <!-- Dashboard -->
         <section id="dashboard">
             <h1 class="section-title">Dashboard</h1>
 
-            <div class="summary-stats" id="summary-stats"></div>
+            <div class="summary-stats">
+                <div class="stat-card">
+                    <h3>Total Used</h3>
+                    <p id="total-used">0</p>
+                </div>
+                <div class="stat-card">
+                    <h3>Most Used Service</h3>
+                    <p id="most-used">-</p>
+                </div>
+                <div class="stat-card">
+                    <h3>Avg Daily Usage</h3>
+                    <p id="avg-daily">0</p>
+                </div>
+                <div class="stat-card">
+                    <h3>Peak Day Usage</h3>
+                    <p id="peak-day">0</p>
+                </div>
+                <div class="stat-card">
+                    <h3>Streak Days</h3>
+                    <p id="streak-days">0</p>
+                </div>
+            </div>
 
             <div class="card mb-6">
-                <h3>Daily Total Usage Trend (last 14 days)</h3>
-                <div style="height: 260px;"><canvas id="trend-chart"></canvas></div>
+                <h3>Daily Total Trend (14 days)</h3>
+                <div class="chart-container"><canvas id="trend-chart"></canvas></div>
             </div>
 
             <div id="services-cards" class="cards"></div>
         </section>
 
-        <!-- Insights -->
         <section id="insights" style="display:none;">
-            <h1 class="section-title">Insights & Analytics</h1>
-
-            <div class="grid-2">
+            <h1 class="section-title">Advanced Analytics</h1>
+            <div class="analytics-grid">
                 <div class="card">
-                    <h3>Usage by Category</h3>
-                    <div style="height: 280px;"><canvas id="category-pie"></canvas></div>
+                    <h3>Category Breakdown</h3>
+                    <div class="chart-container"><canvas id="category-pie"></canvas></div>
                 </div>
                 <div class="card">
-                    <h3>Usage by Day of Week</h3>
-                    <div style="height: 280px;"><canvas id="dow-bar"></canvas></div>
+                    <h3>Top Descriptions</h3>
+                    <ul id="top-descriptions"></ul>
                 </div>
-            </div>
-
-            <div class="card mt-6">
-                <h3>Forecast & Smart Recommendations</h3>
-                <div id="forecast-content" class="forecast-text"></div>
-            </div>
-
-            <div class="card mt-6">
-                <h3>Streak & Milestones</h3>
-                <p id="streak-info" class="text-xl font-bold"></p>
+                <div class="card">
+                    <h3>Service Efficiency</h3>
+                    <canvas id="efficiency-bar"></canvas>
+                </div>
+                <div class="card">
+                    <h3>Low Usage Days</h3>
+                    <p id="low-usage-days">Loading...</p>
+                </div>
+                <div class="card">
+                    <h3>Usage vs Moving Average</h3>
+                    <canvas id="vs-average-line"></canvas>
+                </div>
+                <div class="card">
+                    <h3>End-of-Period Projection</h3>
+                    <p id="projection">Loading...</p>
+                </div>
+                <div class="card">
+                    <h3>Anomalies (Z-Score)</h3>
+                    <p id="anomalies">Loading...</p>
+                </div>
+                <div class="card">
+                    <h3>Smart Recommendations</h3>
+                    <div id="recommendations"></div>
+                </div>
+                <div class="card">
+                    <h3>Usage Heatmap (Day of Week)</h3>
+                    <canvas id="heatmap-chart"></canvas>
+                </div>
+                <div class="card">
+                    <h3>Service Growth Rate</h3>
+                    <canvas id="growth-rate-line"></canvas>
+                </div>
+                <div class="card">
+                    <h3>Category Correlation</h3>
+                    <p id="category-correlation">Loading...</p>
+                </div>
+                <div class="card">
+                    <h3>Next Week Forecast</h3>
+                    <p id="forecast">Loading...</p>
+                </div>
+                <div class="card">
+                    <h3>Outlier Services</h3>
+                    <p id="outliers">Loading...</p>
+                </div>
+                <div class="card">
+                    <h3>Usage Variance</h3>
+                    <p id="variance">Loading...</p>
+                </div>
             </div>
         </section>
 
-        <!-- History -->
-        <section id="history" style="display:none;">
+        <section id="history" style="display: none;">
             <h1 class="section-title">Usage History</h1>
-            <input type="text" id="history-search" placeholder="Search by service, description or category..." class="form-input mb-4">
+            <input type="text" id="history-search" placeholder="Search history..." class="form-input mb-4">
             <ul id="history-list"></ul>
         </section>
 
-        <!-- Add Service -->
-        <section id="add-service" style="display:none;">
-            <h1 class="section-title">Add AI Service</h1>
+        <section id="add-service" style="display: none;">
+            <h1 class="section-title">Add New AI Service</h1>
             <form id="add-service-form">
                 <div class="form-group">
-                    <label>Popular Presets</label>
-                    <div class="preset-buttons">
-                        <button type="button" class="preset-btn" data-preset="grok">Grok</button>
-                        <button type="button" class="preset-btn" data-preset="claude">Claude</button>
-                        <button type="button" class="preset-btn" data-preset="gemini">Gemini</button>
-                        <button type="button" class="preset-btn" data-preset="chatgpt">ChatGPT</button>
-                        <button type="button" class="preset-btn" data-preset="perplexity">Perplexity</button>
-                    </div>
-                </div>
-                <div class="form-group">
                     <label for="service-name">Service Name</label>
-                    <input type="text" id="service-name" required placeholder="e.g. Grok">
+                    <input type="text" id="service-name" required placeholder="e.g. Grok, Claude, Gemini">
                 </div>
                 <div class="form-group">
                     <label for="limit">Free Tier Limit</label>
-                    <input type="number" id="limit" required min="1" placeholder="e.g. 50">
+                    <input type="number" id="limit" required min="1" placeholder="e.g. 100">
                 </div>
                 <div class="form-group">
-                    <label for="refresh-period">Reset Period</label>
+                    <label for="refresh-period">Refresh Period</label>
                     <select id="refresh-period" required>
                         <option value="daily">Daily</option>
                         <option value="weekly">Weekly</option>
                         <option value="monthly">Monthly</option>
                     </select>
                 </div>
-                <button type="submit" class="button primary full-width">
-                    <i class="fas fa-plus"></i> Add Service
-                </button>
+                <button type="submit" class="button primary">Add Service</button>
             </form>
         </section>
 
-        <!-- Settings -->
-        <section id="settings" style="display:none;">
+        <section id="settings" style="display: none;">
             <h1 class="section-title">Settings</h1>
             <div class="settings-group">
-                <label>Dark Mode</label>
+                <label for="dark-mode">Dark Mode</label>
                 <input type="checkbox" id="dark-mode">
             </div>
-            <button class="button secondary full-width mb-3" onclick="document.getElementById('import-file').click()">
-                <i class="fas fa-upload"></i> Import Data (JSON)
-            </button>
-            <input type="file" id="import-file" style="display:none;" accept=".json">
-            <button class="button secondary full-width mb-3" onclick="exportData()">
-                <i class="fas fa-download"></i> Export JSON
-            </button>
-            <button class="button secondary full-width mb-3" onclick="exportCSV()">
-                <i class="fas fa-file-csv"></i> Export CSV
-            </button>
-            <button class="button secondary full-width mb-3" onclick="exportPDF()">
-                <i class="fas fa-file-pdf"></i> Export PDF Report
-            </button>
-            <button class="button danger full-width" onclick="clearAllData()">
-                <i class="fas fa-trash"></i> Clear All Data
-            </button>
+            <button class="button secondary" onclick="exportData()">Export Data</button>
+            <button class="button danger" onclick="clearAllData()">Clear All Data</button>
         </section>
     </div>
 
-    <!-- Toast container -->
-    <div id="toast-container"></div>
+    <!-- Modal for logging usage -->
+    <div id="log-modal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <h2>Log Usage</h2>
+            <form id="log-form">
+                <div class="form-group">
+                    <label for="usage-amount">Amount Used</label>
+                    <input type="number" id="usage-amount" value="1" required>
+                </div>
+                <div class="form-group">
+                    <label for="usage-description">Description</label>
+                    <input type="text" id="usage-description" required>
+                </div>
+                <div class="form-group">
+                    <label for="usage-category">Category</label>
+                    <select id="usage-category">
+                        <option value="research">Research</option>
+                        <option value="coding">Coding</option>
+                        <option value="image">Image Generation</option>
+                        <option value="fun">Fun/Testing</option>
+                        <option value="other">Other</option>
+                    </select>
+                </div>
+                <button type="submit" class="button primary">Log</button>
+            </form>
+        </div>
+    </div>
 
     <script src="script.js"></script>
 </body>
